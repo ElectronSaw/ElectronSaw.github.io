@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#191a1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="application-name" content="NexusAI">
+    <link id="pwaManifestLink" rel="manifest" href="">
+    <link id="pwaAppIconLink" rel="icon" type="image/svg+xml" href="">
+    <link id="pwaAppleIconLink" rel="apple-touch-icon" href="">
+    <title>NexusAI — Mesin Pencari & Riset AI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Marked.js untuk parsing Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Mermaid.js untuk rendering Diagram Riset -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        perplexity: {
+                            bg: '#191a1a',
+                            sidebar: '#141515',
+                            surface: '#202222',
+                            surfaceHover: '#2a2d2d',
+                            border: '#2e3131',
+                            accent: '#20b8cd',
+                            accentHover: '#1ba3b6',
+                            text: '#ececec',
+                            muted: '#8e9292'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e3131;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #424646;
+        }
+
+        /* Markdown Prose Styling */
+        .prose-custom h1, .prose-custom h2, .prose-custom h3 {
+            color: #ffffff;
+            font-weight: 600;
+            margin-top: 1.25rem;
+            margin-bottom: 0.6rem;
+            line-height: 1.35;
+        }
+        .prose-custom h1 { font-size: 1.45rem; }
+        .prose-custom h2 { font-size: 1.22rem; border-bottom: 1px solid #2e3131; padding-bottom: 0.35rem; }
+        .prose-custom h3 { font-size: 1.08rem; color: #20b8cd; }
+        .prose-custom p {
+            margin-bottom: 0.85rem;
+            line-height: 1.72;
+            color: #e4e6e6;
+        }
+        .prose-custom ul, .prose-custom ol {
+            margin-left: 1.35rem;
+            margin-bottom: 0.9rem;
+            color: #e4e6e6;
+        }
+        .prose-custom ul { list-style-type: disc; }
+        .prose-custom ol { list-style-type: decimal; }
+        .prose-custom li {
+            margin-bottom: 0.38rem;
+            line-height: 1.65;
+        }
+        .prose-custom strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .prose-custom a {
+            color: #20b8cd;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .prose-custom code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #262929;
+            color: #5ce1e6;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.35rem;
+            font-size: 0.85em;
+        }
+        .prose-custom pre {
+            background-color: #121313;
+            border: 1px solid #2e3131;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .prose-custom pre code {
+            background-color: transparent;
+            color: #e2e8f0;
+            padding: 0;
+            font-size: 0.85rem;
+        }
+        .prose-custom blockquote {
+            border-left: 3px solid #20b8cd;
+            padding-left: 1rem;
+            margin: 0.9rem 0;
+            color: #a8adad;
+            font-style: italic;
+        }
+        .prose-custom table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .prose-custom th, .prose-custom td {
+            border: 1px solid #2e3131;
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+        }
+        .prose-custom th {
+            background-color: #202222;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Mermaid Diagram Styling */
+        .mermaid-wrapper {
+            background-color: #141515;
+            border: 1px solid #2e3131;
+            border-radius: 0.85rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .mermaid-wrapper svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Badge Sitasi Inline [1], [2] */
+        .inline-citation-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1.2rem;
+            height: 1.2rem;
+            padding: 0 0.3rem;
+            margin: 0 0.12rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #20b8cd;
+            background-color: rgba(32, 184, 205, 0.15);
+            border: 1px solid rgba(32, 184, 205, 0.35);
+            border-radius: 9999px;
+            text-decoration: none !important;
+            vertical-align: super;
+            transition: all 0.15s ease;
+        }
+        .inline-citation-badge:hover {
+            background-color: #20b8cd;
+            color: #141515;
+        }
+
+        /* Animasi Pulse Halus */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton-line {
+            background: linear-gradient(90deg, #202222 25%, #2c3030 50%, #202222 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite linear;
+        }
+    </style>
+</head>
+<body class="bg-perplexity-bg text-perplexity-text font-sans antialiased h-screen overflow-hidden flex selection:bg-perplexity-accent/30 selection:text-white">
+
+    <!-- Overlay Sidebar Mobile -->
+    <div id="mobileOverlay" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden backdrop-blur-xs"></div>
+
+    <!-- SIDEBAR NAVIGASI -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 bg-perplexity-sidebar border-r border-perplexity-border flex flex-col justify-between transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out">
+        <!-- Header Sidebar & Tombol Utas Baru -->
+        <div class="p-4">
+            <div class="flex items-center justify-between mb-5">
+                <button type="button" onclick="startNewThread()" class="flex items-center gap-2.5 text-left group">
+                    <div class="w-8 h-8 rounded-lg bg-perplexity-accent/15 border border-perplexity-accent/40 flex items-center justify-center text-perplexity-accent group-hover:bg-perplexity-accent group-hover:text-perplexity-sidebar transition-colors">
+                        <i data-lucide="compass" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-tight text-white">Nexus<span class="text-perplexity-accent">AI</span></span>
+                        <span class="block text-[10px] text-perplexity-muted -mt-1">Search & Deep Research</span>
+                    </div>
+                </button>
+                <button type="button" onclick="toggleMobileSidebar()" class="md:hidden p-1.5 rounded-lg text-perplexity-muted hover:text-white hover:bg-perplexity-surface">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <button type="button" onclick="startNewThread()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-perplexity-surface hover:bg-perplexity-surfaceHover border border-perplexity-border text-sm font-medium text-white transition-all shadow-xs cursor-pointer">
+                <span class="flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4 text-perplexity-accent"></i>
+                    Utas Baru
+                </span>
+                <kbd class="text-[10px] px-1.5 py-0.5 rounded bg-perplexity-bg text-perplexity-muted border border-perplexity-border">Ctrl K</kbd>
+            </button>
+        </div>
+
+        <!-- Daftar Riwayat Pencarian -->
+        <div class="flex-1 overflow-y-auto px-3 py-1">
+            <div class="flex items-center justify-between px-2 mb-2">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-perplexity-muted">Riwayat Utas</span>
+                <button type="button" onclick="clearAllHistory()" title="Hapus semua riwayat" class="text-[11px] text-perplexity-muted hover:text-red-400 transition-colors cursor-pointer">
+                    Hapus
+                </button>
+            </div>
+            <div id="historyList" class="space-y-1">
+                <!-- Item riwayat dirender via JS -->
+            </div>
+        </div>
+
+        <!-- Footer Sidebar: Status & API Key -->
+        <div class="p-3 border-t border-perplexity-border space-y-2">
+            <div class="px-3 py-2 rounded-xl bg-perplexity-surface/60 border border-perplexity-border/70 flex items-center gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                <div class="min-w-0">
+                    <p class="text-xs font-medium text-white truncate">Gemini 3 Flash + Search</p>
+                    <p class="text-[10px] text-perplexity-muted truncate">Gratis & Grounded Real-Time</p>
+                </div>
+            </div>
+            <button type="button" onclick="openInstallModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium bg-perplexity-accent/15 hover:bg-perplexity-accent/25 border border-perplexity-accent/40 text-perplexity-accent transition-colors cursor-pointer">
+                <span class="flex items-center gap-2">
+                    <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+                    <span>Install Aplikasi Android</span>
+                </span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-perplexity-accent text-perplexity-sidebar font-bold">APP</span>
+            </button>
+            <button type="button" onclick="openApiModal()" class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-perplexity-muted hover:text-white hover:bg-perplexity-surface transition-colors cursor-pointer">
+                <i data-lucide="key-round" class="w-3.5 h-3.5 text-perplexity-accent"></i>
+                <span id="apiKeyStatusLabel">Konfigurasi API Key (Opsional)</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- KONTEN UTAMA -->
+    <main class="flex-1 flex flex-col h-full min-w-0 relative">
+        <!-- Top Bar Mobile -->
+        <header class="md:hidden flex items-center justify-between px-4 py-3 border-b border-perplexity-border bg-perplexity-sidebar/90 backdrop-blur-md z-20">
+            <button type="button" onclick="toggleMobileSidebar()" class="p-2 rounded-lg text-perplexity-muted hover:text-white hover:bg-perplexity-surface">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+            <span class="font-bold text-base text-white">Nexus<span class="text-perplexity-accent">AI</span></span>
+            <div class="flex items-center gap-1">
+                <button type="button" onclick="openInstallModal()" title="Install ke Android" class="p-2 rounded-lg text-perplexity-accent hover:bg-perplexity-surface">
+                    <i data-lucide="download" class="w-5 h-5"></i>
+                </button>
+                <button type="button" onclick="startNewThread()" title="Utas Baru" class="p-2 rounded-lg text-perplexity-text hover:bg-perplexity-surface">
+                    <i data-lucide="square-pen" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Input File Tersembunyi (Dipakai bersama untuk beranda & follow-up) -->
+        <input type="file" id="globalFileInput" class="hidden" accept="image/*,.pdf,.txt,.md,.csv,.json,.js,.py,.html,.css" onchange="handleFileSelected(event)">
+
+        <!-- AREA SCROLLABLE UTAMA -->
+        <div id="mainScrollArea" class="flex-1 overflow-y-auto">
+            <!-- TAMPILAN BERANDA (HERO SEARCH) -->
+            <div id="homeView" class="min-h-full flex flex-col items-center justify-center px-4 py-10 max-w-3xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-perplexity-accent/10 border border-perplexity-accent/30 text-perplexity-accent text-xs font-medium mb-4">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        Didukung Google Search Grounding & Gemini 3
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-2">
+                        Di mana pengetahuan dimulai
+                    </h1>
+                    <p class="text-sm sm:text-base text-perplexity-muted max-w-xl mx-auto">
+                        Tanyakan apa saja, unggah dokumen/gambar, atau aktifkan <span class="text-perplexity-accent font-medium">Riset Mendalam</span> untuk laporan lengkap dengan diagram & visual.
+                    </p>
+                </div>
+
+                <!-- Kotak Pencarian Utama -->
+                <div class="w-full bg-perplexity-surface border border-perplexity-border focus-within:border-perplexity-accent/70 rounded-2xl p-3.5 shadow-xl transition-all">
+                    <!-- Pratinjau File Terlampir (Beranda) -->
+                    <div id="homeFilePreview" class="hidden mb-2.5 p-2 rounded-xl bg-perplexity-bg border border-perplexity-border flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <img id="homeFileThumb" src="" alt="Preview" class="w-10 h-10 rounded-lg object-cover hidden border border-perplexity-border">
+                            <div id="homeFileDocIcon" class="w-10 h-10 rounded-lg bg-perplexity-accent/15 text-perplexity-accent flex items-center justify-center shrink-0">
+                                <i data-lucide="file-text" class="w-5 h-5"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p id="homeFileName" class="text-xs font-medium text-white truncate">dokumen.pdf</p>
+                                <p id="homeFileSize" class="text-[10px] text-perplexity-muted">Siap dianalisis</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="clearAttachedFile()" class="p-1.5 rounded-lg text-perplexity-muted hover:text-red-400 hover:bg-perplexity-surface transition-colors" title="Hapus lampiran">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <textarea
+                        id="homeSearchInput"
+                        rows="3"
+                        placeholder="Tanyakan apa saja atau tulis topik riset mendalam..."
+                        class="w-full bg-transparent text-white placeholder-perplexity-muted text-base resize-none focus:outline-none leading-relaxed"
+                        onkeydown="handleInputKeydown(event, 'home')"
+                    ></textarea>
+
+                    <!-- Toolbar Bawah Kotak Pencarian Utama -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2.5 mt-1 border-t border-perplexity-border/60">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <!-- Tombol Mode Riset Mendalam -->
+                            <button
+                                type="button"
+                                id="homeResearchToggle"
+                                onclick="toggleResearchMode()"
+                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border border-perplexity-border bg-perplexity-bg text-perplexity-muted hover:text-white transition-all cursor-pointer"
+                            >
+                                <i data-lucide="microscope" class="w-3.5 h-3.5"></i>
+                                <span>Riset Mendalam</span>
+                            </button>
+
+                            <!-- Tombol Upload File -->
+                            <button
+                                type="button"
+                                onclick="triggerFileUpload()"
+                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border border-perplexity-border bg-perplexity-bg text-perplexity-muted hover:text-white transition-all cursor-pointer"
+                            >
+                                <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
+                                <span>Lampirkan</span>
+                            </button>
+
+                            <!-- Pilihan Fokus -->
+                            <select id="focusModeSelect" onchange="syncFocusMode(this.value)" class="px-2.5 py-1.5 rounded-xl text-xs font-medium border border-perplexity-border bg-perplexity-bg text-perplexity-muted hover:text-white focus:outline-none cursor-pointer">
+                                <option value="all">🌐 Semua Web</option>
+                                <option value="academic">🎓 Akademik & Jurnal</option>
+                                <option value="tech">💻 Teknologi & Kode</option>
+                                <option value="news">📰 Berita Terkini</option>
+                            </select>
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="submitQuery('home')"
+                            class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-perplexity-accent hover:bg-perplexity-accentHover text-perplexity-sidebar font-semibold text-xs transition-all shadow-md cursor-pointer"
+                        >
+                            <span>Cari</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contoh Prompt Cepat -->
+                <div class="w-full mt-6">
+                    <p class="text-xs text-perplexity-muted mb-2.5 text-center">Coba contoh pencarian atau riset:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <button type="button" onclick="runQuickPrompt('Perkembangan terbaru energi terbarukan dan baterai solid-state tahun 2026', false)" class="text-left p-3 rounded-xl bg-perplexity-surface/60 hover:bg-perplexity-surface border border-perplexity-border/80 text-xs text-perplexity-text flex items-center gap-2.5 transition-all cursor-pointer">
+                            <i data-lucide="zap" class="w-4 h-4 text-perplexity-accent shrink-0"></i>
+                            <span class="truncate">Perkembangan baterai solid-state 2026</span>
+                        </button>
+                        <button type="button" onclick="runQuickPrompt('Analisis mendalam dampak AI agentic terhadap arsitektur perangkat lunak modern', true)" class="text-left p-3 rounded-xl bg-perplexity-surface/60 hover:bg-perplexity-surface border border-perplexity-border/80 text-xs text-perplexity-text flex items-center gap-2.5 transition-all cursor-pointer">
+                            <i data-lucide="microscope" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                            <span class="truncate">[Riset] Dampak AI agentic pada arsitektur software</span>
+                        </button>
+                        <button type="button" onclick="runQuickPrompt('Perbandingan ekonomi digital Asia Tenggara dan peluang startup AI di Indonesia', true)" class="text-left p-3 rounded-xl bg-perplexity-surface/60 hover:bg-perplexity-surface border border-perplexity-border/80 text-xs text-perplexity-text flex items-center gap-2.5 transition-all cursor-pointer">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                            <span class="truncate">[Riset] Ekonomi digital & startup AI Indonesia</span>
+                        </button>
+                        <button type="button" onclick="runQuickPrompt('Cara kerja algoritma konsensus Raft dalam sistem terdistribusi beserta diagramnya', true)" class="text-left p-3 rounded-xl bg-perplexity-surface/60 hover:bg-perplexity-surface border border-perplexity-border/80 text-xs text-perplexity-text flex items-center gap-2.5 transition-all cursor-pointer">
+                            <i data-lucide="git-fork" class="w-4 h-4 text-purple-400 shrink-0"></i>
+                            <span class="truncate">[Riset] Cara kerja algoritma konsensus Raft</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAMPILAN UTAS PERCAKAPAN / HASIL RISET -->
+            <div id="threadView" class="hidden max-w-3xl mx-auto px-4 pt-6 pb-44 space-y-8">
+                <!-- Turn percakapan dirender di sini secara dinamis -->
+            </div>
+        </div>
+
+        <!-- BILAH INPUT LANJUTAN & KOREKSI LANGSUNG (Muncul saat di Thread View) -->
+        <div id="followUpBar" class="hidden absolute bottom-0 inset-x-0 bg-gradient-to-t from-perplexity-bg via-perplexity-bg to-transparent pt-6 pb-4 px-4 z-20">
+            <div class="max-w-3xl mx-auto">
+                <!-- Banner Status Saat AI Sedang Bekerja (Stop & Koreksi Langsung) -->
+                <div id="activeWorkBanner" class="hidden mb-2 px-3.5 py-2 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2 text-xs text-amber-200">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
+                        <span id="activeWorkLabel">AI sedang memproses... Ketik di bawah untuk koreksi langsung atau hentikan.</span>
+                    </div>
+                    <button type="button" onclick="cancelActiveRequest()" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 text-red-300 text-xs font-medium shrink-0 transition-colors cursor-pointer">
+                        <i data-lucide="square" class="w-3 h-3 fill-current"></i>
+                        <span>Hentikan</span>
+                    </button>
+                </div>
+
+                <!-- Kotak Input Lanjutan -->
+                <div class="bg-perplexity-surface border border-perplexity-border focus-within:border-perplexity-accent/70 rounded-2xl p-2.5 shadow-2xl">
+                    <!-- Pratinjau File Terlampir (Follow-up) -->
+                    <div id="followUpFilePreview" class="hidden mb-2 p-2 rounded-xl bg-perplexity-bg border border-perplexity-border flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <img id="followUpFileThumb" src="" alt="Preview" class="w-8 h-8 rounded-lg object-cover hidden border border-perplexity-border">
+                            <div id="followUpFileDocIcon" class="w-8 h-8 rounded-lg bg-perplexity-accent/15 text-perplexity-accent flex items-center justify-center shrink-0">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                            </div>
+                            <span id="followUpFileName" class="text-xs text-white truncate">file.pdf</span>
+                        </div>
+                        <button type="button" onclick="clearAttachedFile()" class="p-1 rounded-lg text-perplexity-muted hover:text-red-400">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-end gap-2">
+                        <textarea
+                            id="followUpInput"
+                            rows="1"
+                            placeholder="Ajukan pertanyaan lanjutan..."
+                            class="flex-1 bg-transparent text-white placeholder-perplexity-muted text-sm resize-none focus:outline-none py-1.5 px-2 max-h-32 leading-relaxed"
+                            oninput="autoResizeTextarea(this)"
+                            onkeydown="handleInputKeydown(event, 'followup')"
+                        ></textarea>
+
+                        <div class="flex items-center gap-1.5 shrink-0 pb-0.5">
+                            <!-- Toggle Riset Mendalam -->
+                            <button
+                                type="button"
+                                id="followUpResearchToggle"
+                                onclick="toggleResearchMode()"
+                                title="Mode Riset Mendalam"
+                                class="p-2 rounded-xl border border-perplexity-border bg-perplexity-bg text-perplexity-muted hover:text-white transition-all cursor-pointer"
+                            >
+                                <i data-lucide="microscope" class="w-4 h-4"></i>
+                            </button>
+
+                            <!-- Lampirkan File -->
+                            <button
+                                type="button"
+                                onclick="triggerFileUpload()"
+                                title="Lampirkan file atau gambar"
+                                class="p-2 rounded-xl border border-perplexity-border bg-perplexity-bg text-perplexity-muted hover:text-white transition-all cursor-pointer"
+                            >
+                                <i data-lucide="paperclip" class="w-4 h-4"></i>
+                            </button>
+
+                            <!-- Tombol Kirim / Koreksi -->
+                            <button
+                                type="button"
+                                id="followUpSubmitBtn"
+                                onclick="submitQuery('followup')"
+                                class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-perplexity-accent hover:bg-perplexity-accentHover text-perplexity-sidebar font-semibold text-xs transition-all cursor-pointer"
+                            >
+                                <span id="followUpSubmitLabel">Kirim</span>
+                                <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL KONFIGURASI API KEY (OPSIONAL) -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center p-4 backdrop-blur-xs">
+        <div class="bg-perplexity-surface border border-perplexity-border rounded-2xl max-w-md w-full p-5 shadow-2xl">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-base font-semibold text-white flex items-center gap-2">
+                    <i data-lucide="key-round" class="w-4 h-4 text-perplexity-accent"></i>
+                    Konfigurasi Gemini API Key
+                </h3>
+                <button type="button" onclick="closeApiModal()" class="text-perplexity-muted hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p class="text-xs text-perplexity-muted leading-relaxed mb-4">
+                Di lingkungan pratinjau ini, kunci API sudah terpasang otomatis secara gratis. Isi kolom di bawah hanya jika Anda menjalankan file HTML ini secara mandiri di luar pratinjau menggunakan kunci gratis dari Google AI Studio.
+            </p>
+            <input
+                type="password"
+                id="customApiKeyInput"
+                placeholder="AIzaSy..."
+                class="w-full px-3.5 py-2.5 rounded-xl bg-perplexity-bg border border-perplexity-border text-sm text-white placeholder-perplexity-muted focus:outline-none focus:border-perplexity-accent mb-4"
+            >
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="clearCustomApiKey()" class="px-3.5 py-2 rounded-xl text-xs text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer">
+                    Reset Default
+                </button>
+                <button type="button" onclick="saveCustomApiKey()" class="px-4 py-2 rounded-xl bg-perplexity-accent hover:bg-perplexity-accentHover text-perplexity-sidebar font-semibold text-xs transition-colors cursor-pointer">
+                    Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INSTALL APLIKASI ANDROID & APK -->
+    <div id="installAppModal" class="fixed inset-0 bg-black/75 z-50 hidden items-center justify-center p-4 backdrop-blur-xs">
+        <div class="bg-perplexity-surface border border-perplexity-border rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-semibold text-white flex items-center gap-2">
+                    <i data-lucide="smartphone" class="w-4 h-4 text-perplexity-accent"></i>
+                    Pasang NexusAI di Android
+                </h3>
+                <button type="button" onclick="closeInstallModal()" class="text-perplexity-muted hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Tombol Install Langsung (Muncul jika browser mendukung prompt PWA langsung) -->
+            <div id="nativeInstallPromptBox" class="hidden p-3.5 rounded-xl bg-perplexity-accent/15 border border-perplexity-accent/40 space-y-2.5">
+                <p class="text-xs text-white font-medium">Perangkat Anda siap memasang aplikasi NexusAI secara instan (layar penuh tanpa bilah browser):</p>
+                <button type="button" onclick="triggerNativeInstall()" class="w-full py-2.5 rounded-xl bg-perplexity-accent hover:bg-perplexity-accentHover text-perplexity-sidebar font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Install Aplikasi Sekarang</span>
+                </button>
+            </div>
+
+            <!-- Cara 1: Install PWA Langsung dari Chrome Android -->
+            <div class="p-3.5 rounded-xl bg-perplexity-bg border border-perplexity-border space-y-2 text-xs">
+                <p class="font-semibold text-perplexity-accent flex items-center gap-1.5">
+                    <span>1. Install Langsung via Chrome Android (Tercepat)</span>
+                </p>
+                <ol class="list-decimal ml-4 space-y-1 text-perplexity-muted leading-relaxed">
+                    <li>Unduh kode HTML ini lalu hosting gratis (misal ke <strong>GitHub Pages</strong>, <strong>Netlify Drop</strong>, atau <strong>Vercel</strong>).</li>
+                    <li>Buka tautannya di <strong>Google Chrome Android</strong>.</li>
+                    <li>Ketuk ikon titik tiga (<strong class="text-white">⋮</strong>) di pojok kanan atas &rarr; pilih <strong class="text-white">Tambahkan ke layar utama / Install aplikasi</strong>.</li>
+                    <li>Ikon <strong>NexusAI</strong> akan muncul di laci aplikasi Android Anda dan berjalan penuh layaknya aplikasi native.</li>
+                </ol>
+            </div>
+
+            <!-- Cara 2: Ubah ke File .APK Installer -->
+            <div class="p-3.5 rounded-xl bg-perplexity-bg border border-perplexity-border space-y-2 text-xs">
+                <p class="font-semibold text-emerald-400 flex items-center gap-1.5">
+                    <span>2. Unduh sebagai File Installer (.APK)</span>
+                </p>
+                <p class="text-perplexity-muted leading-relaxed">
+                    Jika Anda membutuhkan file <code class="text-perplexity-accent">NexusAI.apk</code> untuk dibagikan atau diinstal manual:
+                </p>
+                <ol class="list-decimal ml-4 space-y-1 text-perplexity-muted leading-relaxed">
+                    <li>Masukkan URL hosting aplikasi ini ke <strong class="text-white">PWABuilder.com</strong> (gratis dari Microsoft), lalu klik <strong class="text-white">Package for Stores &rarr; Android &rarr; Download APK</strong>.</li>
+                    <li>Atau bungkus file <code class="text-perplexity-accent">index.html</code> ini secara lokal menggunakan <strong class="text-white">Capacitor</strong> (<code class="text-perplexity-accent">npx cap add android</code>).</li>
+                </ol>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="button" onclick="closeInstallModal()" class="px-4 py-2 rounded-xl bg-perplexity-bg hover:bg-perplexity-surfaceHover border border-perplexity-border text-xs text-white font-medium cursor-pointer">
+                    Mengerti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFIKASI -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none"></div>
+
+    <script>
+        // Inisialisasi ikon Lucide & Mermaid Diagram
+        lucide.createIcons();
+        if (window.mermaid) {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'dark',
+                securityLevel: 'loose',
+                fontFamily: 'Inter, sans-serif'
+            });
+        }
+
+        // Konfigurasi Runtime API Key (Otomatis diisi oleh lingkungan eksekusi jika kosong)
+        const apiKey = "";
+        const MODEL_NAME = "gemini-3-flash-preview";
+        const IMAGE_MODEL_NAME = "gemini-3.1-flash-image";
+
+        // State Aplikasi
+        let customApiKey = localStorage.getItem('nexus_custom_api_key') || "";
+        let savedThreads = JSON.parse(localStorage.getItem('nexus_threads') || "[]");
+        let currentThreadId = null;
+        let conversationHistory = [];
+        let isDeepResearchMode = false;
+        let focusMode = 'all';
+        let attachedFile = null;
+        let isGenerating = false;
+        let activeAbortController = null;
+        let activeTurnId = null;
+        let deferredInstallPrompt = null;
+
+        // Inisialisasi awal saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            setupAndroidPWA();
+            updateApiKeyLabel();
+            renderHistoryList();
+            if (window.marked) {
+                marked.setOptions({ breaks: true, gfm: true });
+            }
+        });
+
+        // Tangkap event install PWA dari Chrome Android
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            const box = document.getElementById('nativeInstallPromptBox');
+            if (box) box.classList.remove('hidden');
+        });
+
+        // ==========================================
+        // KONFIGURASI PWA ANDROID (MANIFEST & OFFLINE)
+        // ==========================================
+
+        function setupAndroidPWA() {
+            try {
+                // Buat ikon aplikasi vektor resolusi tinggi (512x512)
+                const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#141515"/><circle cx="256" cy="256" r="148" fill="none" stroke="#20b8cd" stroke-width="28"/><polygon points="256,142 296,236 390,256 296,276 256,370 216,276 122,256 216,236" fill="#20b8cd"/></svg>`;
+                const iconDataUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg);
+
+                const iconLink = document.getElementById('pwaAppIconLink');
+                const appleIconLink = document.getElementById('pwaAppleIconLink');
+                if (iconLink) iconLink.href = iconDataUri;
+                if (appleIconLink) appleIconLink.href = iconDataUri;
+
+                // Buat Web App Manifest dinamis untuk mode layar penuh Android
+                const manifestObj = {
+                    name: "NexusAI — Mesin Pencari & Riset AI",
+                    short_name: "NexusAI",
+                    description: "Mesin pencari AI & riset mendalam dengan sumber terverifikasi",
+                    start_url: window.location.href,
+                    display: "standalone",
+                    orientation: "portrait",
+                    background_color: "#191a1a",
+                    theme_color: "#191a1a",
+                    icons: [
+                        { src: iconDataUri, sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" },
+                        { src: iconDataUri, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+                    ]
+                };
+
+                const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                const manifestUrl = URL.createObjectURL(manifestBlob);
+                const manifestLink = document.getElementById('pwaManifestLink');
+                if (manifestLink) manifestLink.href = manifestUrl;
+            } catch (e) {
+                // Abaikan jika sandbox membatasi blob manifest
+            }
+        }
+
+        function openInstallModal() {
+            const modal = document.getElementById('installAppModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeInstallModal() {
+            const modal = document.getElementById('installAppModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function triggerNativeInstall() {
+            if (!deferredInstallPrompt) {
+                showToast('Gunakan menu titik tiga Chrome > Tambahkan ke layar utama', 'info');
+                return;
+            }
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            if (outcome === 'accepted') {
+                showToast('NexusAI berhasil dipasang ke layar utama!', 'success');
+                closeInstallModal();
+            }
+            deferredInstallPrompt = null;
+        }
+
+        // Shortcut Ctrl+K untuk utas baru
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                startNewThread();
+            }
+        });
+
+        // ==========================================
+        // MANAJEMEN UI, TOAST & NAVIGASI
+        // ==========================================
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const colors = {
+                info: 'bg-perplexity-surface border-perplexity-accent/50 text-white',
+                success: 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200',
+                error: 'bg-red-950/90 border-red-500/50 text-red-200'
+            };
+            toast.className = `pointer-events-auto px-4 py-2.5 rounded-xl border text-xs font-medium shadow-lg backdrop-blur-md transition-all duration-300 ${colors[type] || colors.info}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function autoResizeTextarea(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 128) + 'px';
+        }
+
+        function handleInputKeydown(e, source) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitQuery(source);
+            }
+        }
+
+        function toggleResearchMode() {
+            isDeepResearchMode = !isDeepResearchMode;
+            const homeBtn = document.getElementById('homeResearchToggle');
+            const followBtn = document.getElementById('followUpResearchToggle');
+
+            if (isDeepResearchMode) {
+                homeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-perplexity-accent bg-perplexity-accent/15 text-perplexity-accent transition-all cursor-pointer';
+                followBtn.className = 'p-2 rounded-xl border border-perplexity-accent bg-perplexity-accent/15 text-perplexity-accent transition-all cursor-pointer';
+                showToast('Mode Riset Mendalam aktif (Multi-tahap + Diagram & Visual)', 'info');
+            } else {
+                homeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border border-perplexity-border bg-perplexity-bg text-perplexity-muted hover:text-white transition-all cursor-pointer';
+                followBtn.className = 'p-2 rounded-xl border border-perplexity-border bg-perplexity-bg text-perplexity-muted hover:text-white transition-all cursor-pointer';
+            }
+        }
+
+        function syncFocusMode(val) {
+            focusMode = val;
+        }
+
+        function startNewThread() {
+            if (isGenerating) cancelActiveRequest(true);
+            currentThreadId = null;
+            conversationHistory = [];
+            clearAttachedFile();
+
+            document.getElementById('homeView').classList.remove('hidden');
+            document.getElementById('threadView').classList.add('hidden');
+            document.getElementById('threadView').innerHTML = '';
+            document.getElementById('followUpBar').classList.add('hidden');
+            document.getElementById('homeSearchInput').value = '';
+            document.getElementById('homeSearchInput').focus();
+            renderHistoryList();
+
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('mobileOverlay').classList.add('hidden');
+            }
+        }
+
+        function runQuickPrompt(text, enableResearch = false) {
+            if (enableResearch && !isDeepResearchMode) {
+                toggleResearchMode();
+            } else if (!enableResearch && isDeepResearchMode) {
+                toggleResearchMode();
+            }
+            const input = document.getElementById('homeSearchInput');
+            input.value = text;
+            submitQuery('home');
+        }
+
+        // ==========================================
+        // KONFIGURASI API KEY OPSIONAL
+        // ==========================================
+
+        function openApiModal() {
+            document.getElementById('customApiKeyInput').value = customApiKey;
+            const modal = document.getElementById('apiKeyModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeApiModal() {
+            const modal = document.getElementById('apiKeyModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function saveCustomApiKey() {
+            customApiKey = document.getElementById('customApiKeyInput').value.trim();
+            localStorage.setItem('nexus_custom_api_key', customApiKey);
+            updateApiKeyLabel();
+            closeApiModal();
+            showToast('Konfigurasi API Key disimpan', 'success');
+        }
+
+        function clearCustomApiKey() {
+            customApiKey = '';
+            localStorage.removeItem('nexus_custom_api_key');
+            document.getElementById('customApiKeyInput').value = '';
+            updateApiKeyLabel();
+            closeApiModal();
+            showToast('Kembali menggunakan kunci bawaan sistem', 'info');
+        }
+
+        function updateApiKeyLabel() {
+            const label = document.getElementById('apiKeyStatusLabel');
+            if (customApiKey) {
+                label.textContent = 'API Key Kustom Aktif';
+                label.classList.add('text-perplexity-accent');
+            } else {
+                label.textContent = 'Konfigurasi API Key (Opsional)';
+                label.classList.remove('text-perplexity-accent');
+            }
+        }
+
+        // ==========================================
+        // UPLOAD & PRATINJAU FILE
+        // ==========================================
+
+        function triggerFileUpload() {
+            document.getElementById('globalFileInput').click();
+        }
+
+        function handleFileSelected(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            if (file.size > 15 * 1024 * 1024) {
+                showToast('Ukuran file maksimal 15 MB', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const dataUrl = reader.result;
+                const base64Data = dataUrl.split(',')[1];
+                const isImage = file.type.startsWith('image/');
+                const mimeType = file.type || 'text/plain';
+
+                attachedFile = {
+                    name: file.name,
+                    size: (file.size / 1024).toFixed(1) + ' KB',
+                    mimeType: mimeType,
+                    base64: base64Data,
+                    isImage: isImage,
+                    previewUrl: isImage ? dataUrl : null
+                };
+
+                updateFilePreviewUI();
+                showToast(`File "${file.name}" dilampirkan`, 'success');
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function updateFilePreviewUI() {
+            const homePrev = document.getElementById('homeFilePreview');
+            const followPrev = document.getElementById('followUpFilePreview');
+
+            if (!attachedFile) {
+                homePrev.classList.add('hidden');
+                followPrev.classList.add('hidden');
+                return;
+            }
+
+            // Update Beranda Preview
+            homePrev.classList.remove('hidden');
+            document.getElementById('homeFileName').textContent = attachedFile.name;
+            document.getElementById('homeFileSize').textContent = attachedFile.size;
+            if (attachedFile.isImage) {
+                const thumb = document.getElementById('homeFileThumb');
+                thumb.src = attachedFile.previewUrl;
+                thumb.classList.remove('hidden');
+                document.getElementById('homeFileDocIcon').classList.add('hidden');
+            } else {
+                document.getElementById('homeFileThumb').classList.add('hidden');
+                document.getElementById('homeFileDocIcon').classList.remove('hidden');
+            }
+
+            // Update Follow-up Preview
+            followPrev.classList.remove('hidden');
+            document.getElementById('followUpFileName').textContent = attachedFile.name;
+            if (attachedFile.isImage) {
+                const fThumb = document.getElementById('followUpFileThumb');
+                fThumb.src = attachedFile.previewUrl;
+                fThumb.classList.remove('hidden');
+                document.getElementById('followUpFileDocIcon').classList.add('hidden');
+            } else {
+                document.getElementById('followUpFileThumb').classList.add('hidden');
+                document.getElementById('followUpFileDocIcon').classList.remove('hidden');
+            }
+        }
+
+        function clearAttachedFile() {
+            attachedFile = null;
+            updateFilePreviewUI();
+        }
+
+        // ==========================================
+        // KONTROL EKSEKUSI, STOP & KOREKSI LANGSUNG
+        // ==========================================
+
+        function setWorkingState(working, statusText = '') {
+            isGenerating = working;
+            const banner = document.getElementById('activeWorkBanner');
+            const label = document.getElementById('activeWorkLabel');
+            const submitLabel = document.getElementById('followUpSubmitLabel');
+            const followInput = document.getElementById('followUpInput');
+
+            if (working) {
+                banner.classList.remove('hidden');
+                if (statusText) label.textContent = statusText;
+                submitLabel.textContent = 'Koreksi';
+                followInput.placeholder = 'Ketik koreksi langsung saat AI sedang bekerja...';
+            } else {
+                banner.classList.add('hidden');
+                submitLabel.textContent = 'Kirim';
+                followInput.placeholder = 'Ajukan pertanyaan lanjutan...';
+            }
+        }
+
+        function cancelActiveRequest(silent = false) {
+            if (activeAbortController) {
+                activeAbortController.abort();
+                activeAbortController = null;
+            }
+            if (activeTurnId) {
+                const turnEl = document.getElementById(activeTurnId);
+                if (turnEl) {
+                    const statusBadge = turnEl.querySelector('.turn-status-area');
+                    if (statusBadge) {
+                        statusBadge.innerHTML = `<div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-300 flex items-center gap-2"><i data-lucide="slash" class="w-4 h-4"></i> Proses dibatalkan oleh pengguna.</div>`;
+                        lucide.createIcons();
+                    }
+                }
+                activeTurnId = null;
+            }
+            setWorkingState(false);
+            if (!silent) showToast('Perintah dibatalkan', 'info');
+        }
+
+        // ==========================================
+        // PENGIRIMAN QUERY & ALUR UTAMA
+        // ==========================================
+
+        async function submitQuery(source) {
+            const inputEl = source === 'home' ? document.getElementById('homeSearchInput') : document.getElementById('followUpInput');
+            let rawQuery = inputEl.value.trim();
+
+            if (!rawQuery && !attachedFile) {
+                showToast('Masukkan pertanyaan atau lampirkan file terlebih dahulu', 'info');
+                return;
+            }
+            if (!rawQuery && attachedFile) {
+                rawQuery = `Analisis file "${attachedFile.name}" ini secara mendalam.`;
+            }
+
+            // Jika AI sedang bekerja saat user menekan Kirim/Koreksi, batalkan proses lama & gabungkan koreksi!
+            let isLiveSteering = false;
+            if (isGenerating) {
+                isLiveSteering = true;
+                const previousTurn = conversationHistory[conversationHistory.length - 1];
+                const prevText = previousTurn?.parts?.[0]?.text || '';
+                cancelActiveRequest(true);
+                rawQuery = `${prevText}\n\n[KOREKSI / ARAHAN TAMBAHAN PENGGUNA]: ${rawQuery}`;
+                showToast('Menerapkan koreksi langsung ke proses AI...', 'info');
+            }
+
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+
+            // Pindah ke tampilan Thread View
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('threadView').classList.remove('hidden');
+            document.getElementById('followUpBar').classList.remove('hidden');
+
+            const currentFile = attachedFile;
+            clearAttachedFile();
+
+            const turnId = 'turn-' + Date.now();
+            activeTurnId = turnId;
+            activeAbortController = new AbortController();
+            const signal = activeAbortController.signal;
+
+            // Siapkan parts untuk Gemini API
+            const userParts = [{ text: rawQuery }];
+            if (currentFile) {
+                userParts.push({
+                    inlineData: {
+                        mimeType: currentFile.mimeType,
+                        data: currentFile.base64
+                    }
+                });
+            }
+
+            if (isLiveSteering && conversationHistory.length > 0 && conversationHistory[conversationHistory.length - 1].role === 'user') {
+                conversationHistory[conversationHistory.length - 1] = { role: 'user', parts: userParts };
+            } else {
+                conversationHistory.push({ role: 'user', parts: userParts });
+            }
+
+            const fileMeta = currentFile ? {
+                name: currentFile.name,
+                isImage: currentFile.isImage,
+                previewUrl: currentFile.isImage ? currentFile.previewUrl : null
+            } : null;
+
+            // Buat kerangka UI untuk turn ini
+            createTurnSkeleton(turnId, rawQuery, fileMeta, isDeepResearchMode);
+            setWorkingState(true, isDeepResearchMode ? 'Menjalankan Riset Mendalam (Multi-tahap)...' : 'Mencari & menyintesis jawaban...');
+
+            try {
+                let result;
+                if (isDeepResearchMode) {
+                    result = await executeDeepResearch(turnId, rawQuery, conversationHistory, signal);
+                } else {
+                    result = await executeStandardSearch(rawQuery, conversationHistory, signal);
+                }
+
+                if (signal.aborted) return;
+
+                // Simpan jawaban model ke riwayat konteks sesi
+                conversationHistory.push({
+                    role: 'model',
+                    parts: [{ text: result.text }]
+                });
+
+                // Render hasil lengkap ke UI
+                renderTurnResult(
+                    turnId,
+                    rawQuery,
+                    result.text,
+                    result.sources,
+                    result.relatedQueries,
+                    fileMeta,
+                    result.researchSteps || null,
+                    result.generatedImage || null
+                );
+
+                // Simpan ke localStorage
+                saveThreadToStorage(
+                    rawQuery,
+                    result.text,
+                    result.sources,
+                    result.relatedQueries,
+                    fileMeta,
+                    result.researchSteps || null,
+                    result.generatedImage || null
+                );
+
+            } catch (error) {
+                if (error.name === 'AbortError' || signal.aborted) return;
+                console.error('Execution error:', error);
+                renderTurnError(turnId, error.message || 'Terjadi kesalahan saat menghubungi layanan Gemini AI.');
+            } finally {
+                if (activeTurnId === turnId) {
+                    activeTurnId = null;
+                    activeAbortController = null;
+                    setWorkingState(false);
+                }
+            }
+        }
+
+        // ==========================================
+        // PENCARIAN STANDAR (GROUNDED SEARCH)
+        // ==========================================
+
+        async function executeStandardSearch(query, historyContext, signal) {
+            const focusInstructions = {
+                all: 'Gunakan sumber web kredibel dan terkini secara menyeluruh.',
+                academic: 'Prioritaskan jurnal ilmiah, publikasi akademik, universitas, dan riset terverifikasi.',
+                tech: 'Prioritaskan dokumentasi teknis resmi, repositori pengembang, dan analisis teknologi mendalam.',
+                news: 'Prioritaskan berita terkini, laporan jurnalistik terpercaya, dan perkembangan terbaru.'
+            };
+
+            const systemPrompt = `Anda adalah NexusAI, mesin pencari cerdas bergaya Perplexity yang akurat, objektif, dan terstruktur.
+Aturan Wajib:
+1. Jawab dalam Bahasa Indonesia yang jelas, ringkas namun informatif, menggunakan format Markdown (poin, subjudul, tabel jika relevan).
+2. ${focusInstructions[focusMode] || focusInstructions.all}
+3. WAJIB menyertakan nomor sitasi inline seperti [1], [2], [3] langsung di akhir kalimat atau klaim fakta yang merujuk pada hasil pencarian web.
+4. Di bagian PALING AKHIR respons Anda, wajib sertakan tepat 3 pertanyaan lanjutan yang relevan dengan format persis:
+---RELATED---
+Pertanyaan lanjutan 1?
+Pertanyaan lanjutan 2?
+Pertanyaan lanjutan 3?`;
+
+            const response = await callRawGemini(historyContext, true, 0.3, 2500, systemPrompt, signal);
+            const { cleanText, relatedQueries } = extractRelatedQueries(response.text);
+
+            return {
+                text: cleanText,
+                sources: response.sources,
+                relatedQueries: relatedQueries
+            };
+        }
+
+        // ==========================================
+        // MODE RISET MENDALAM (MULTI-TAHAP + DIAGRAM & GAMBAR)
+        // ==========================================
+
+        async function executeDeepResearch(turnId, mainTopic, historyContext, signal) {
+            const throwIfAborted = () => {
+                if (signal && signal.aborted) throw new DOMException('Aborted', 'AbortError');
+            };
+
+            const updateResearchProgress = (stepIdx, statusText, subQueries = []) => {
+                const progressEl = document.getElementById(`${turnId}-research-progress`);
+                if (!progressEl) return;
+
+                const stepsList = [
+                    { label: 'Merumuskan rencana & sub-pertanyaan riset', done: stepIdx > 1, active: stepIdx === 1 },
+                    { label: 'Menelusuri & memverifikasi sumber web lintas sudut pandang', done: stepIdx > 2, active: stepIdx === 2 },
+                    { label: 'Mensintesis laporan, diagram & ilustrasi visual riset', done: stepIdx > 3, active: stepIdx === 3 }
+                ];
+
+                progressEl.innerHTML = `
+                    <div class="p-4 rounded-2xl bg-perplexity-surface border border-perplexity-accent/30 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-perplexity-accent flex items-center gap-2">
+                                <i data-lucide="microscope" class="w-4 h-4 animate-pulse"></i>
+                                ${escapeHtml(statusText)}
+                            </span>
+                            <span class="text-[11px] text-perplexity-muted">Tahap ${Math.min(stepIdx, 3)}/3</span>
+                        </div>
+                        <div class="space-y-1.5">
+                            ${stepsList.map(s => `
+                                <div class="flex items-center gap-2 text-xs ${s.done ? 'text-emerald-400' : s.active ? 'text-white font-medium' : 'text-perplexity-muted'}">
+                                    ${s.done ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 shrink-0"></i>' : s.active ? '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-perplexity-accent shrink-0"></i>' : '<i data-lucide="circle" class="w-3.5 h-3.5 shrink-0"></i>'}
+                                    <span>${s.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${subQueries.length > 0 ? `
+                            <div class="pt-2 border-t border-perplexity-border/60 flex flex-wrap gap-1.5">
+                                ${subQueries.map(q => `<span class="text-[11px] px-2 py-0.5 rounded-md bg-perplexity-bg border border-perplexity-border text-perplexity-muted">🔍 ${escapeHtml(q)}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                lucide.createIcons();
+            };
+
+            // TAHAP 1: Perencanaan Sub-Pertanyaan Riset
+            throwIfAborted();
+            updateResearchProgress(1, 'Merencanakan sudut pandang investigasi...');
+
+            const planPrompt = `Pecah topik riset berikut menjadi tepat 3 sub-pertanyaan investigasi spesifik dan saling melengkapi untuk pencarian web mendalam.
+Topik: "${mainTopic}"
+Kembalikan HANYA 3 baris pertanyaan tanpa nomor, tanpa bullet, dan tanpa teks pengantar lain.`;
+
+            const planRes = await callRawGemini([{ role: 'user', parts: [{ text: planPrompt }] }], false, 0.2, 400, null, signal);
+            throwIfAborted();
+
+            let subQueries = planRes.text
+                .split('\n')
+                .map(line => line.replace(/^[\d\-\*\.\)]+\s*/, '').trim())
+                .filter(line => line.length > 5)
+                .slice(0, 3);
+
+            if (subQueries.length === 0) {
+                subQueries = [
+                    `Fakta dan data terbaru mengenai ${mainTopic}`,
+                    `Analisis teknis dan perbandingan terkait ${mainTopic}`,
+                    `Dampak, tantangan, dan prospek masa depan ${mainTopic}`
+                ];
+            }
+
+            // TAHAP 2: Penelusuran Web Paralel untuk Setiap Sub-Pertanyaan
+            updateResearchProgress(2, 'Menelusuri sumber web terverifikasi...', subQueries);
+
+            const searchPromises = subQueries.map(sq =>
+                callRawGemini(
+                    [{ role: 'user', parts: [{ text: `Lakukan pencarian web mendalam dan rangkum fakta kunci, data angka, serta temuan valid untuk: ${sq}` }] }],
+                    true,
+                    0.2,
+                    1200,
+                    null,
+                    signal
+                ).catch(() => ({ text: '', sources: [] }))
+            );
+
+            const subResults = await Promise.all(searchPromises);
+            throwIfAborted();
+
+            // Gabungkan & deduplikasi seluruh sumber valid
+            const allSources = [];
+            const seenUrls = new Set();
+            let gatheredNotes = '';
+
+            subResults.forEach((res, idx) => {
+                if (res.text) {
+                    gatheredNotes += `\n### Catatan Sub-Riset ${idx + 1} (${subQueries[idx]}):\n${res.text}\n`;
+                }
+                (res.sources || []).forEach(src => {
+                    if (src.url && !seenUrls.has(src.url)) {
+                        seenUrls.add(src.url);
+                        allSources.push(src);
+                    }
+                });
+            });
+
+            // TAHAP 3: Sintesis Laporan Riset Akhir + Diagram & Ilustrasi Visual
+            updateResearchProgress(3, 'Menyusun laporan, diagram & visual riset...', subQueries);
+
+            const numberedSourcesContext = allSources
+                .map((s, idx) => `[${idx + 1}] ${s.title} (${s.domain}) - ${s.url}`)
+                .join('\n');
+
+            const synthesisPrompt = `Anda adalah Analis Riset Senior di NexusAI. Susun **Laporan Riset Mendalam** yang sangat komprehensif, tajam, terstruktur rapi, dan berbasis data untuk menjawab topik utama:
+"${mainTopic}"
+
+Gunakan catatan hasil investigasi web multi-sudut pandang berikut sebagai bahan utama:
+${gatheredNotes}
+
+Daftar Sumber Terverifikasi yang tersedia (gunakan nomor indeks ini untuk sitasi inline [1], [2], dst.):
+${numberedSourcesContext || '(Gunakan pengetahuan terverifikasi dan hasil pencarian web)'}
+
+Struktur Laporan Wajib:
+1. **Ringkasan Eksekutif** (Intisari temuan paling krusial dalam 1-2 paragraf padat).
+2. **Diagram Alur / Struktur Konsep (Mermaid)** — WAJIB sertakan 1 blok kode \`\`\`mermaid (gunakan \`graph TD\` atau \`flowchart LR\` sederhana dengan label Bahasa Indonesia yang ringkas, tanpa tanda kurung atau karakter khusus di dalam teks node agar 100% valid dirender).
+3. **Temuan Utama & Analisis Mendalam** (Bagi menjadi beberapa sub-bagian tematik dengan data/fakta spesifik dan sitasi inline [1], [2]).
+4. **Perbandingan / Matriks Data** (Buat tabel Markdown untuk merangkum perbandingan atau metrik kunci).
+5. **Implikasi & Kesimpulan Strategis** (Rekomendasi atau pandangan ke depan).
+
+Di bagian PALING AKHIR respons Anda, wajib sertakan tepat 3 pertanyaan riset lanjutan dengan format persis:
+---RELATED---
+Pertanyaan lanjutan 1?
+Pertanyaan lanjutan 2?
+Pertanyaan lanjutan 3?`;
+
+            const finalContents = historyContext.map((turn, idx) => {
+                if (idx === historyContext.length - 1) {
+                    const newParts = [...turn.parts];
+                    newParts[0] = { text: synthesisPrompt };
+                    return { role: 'user', parts: newParts };
+                }
+                return turn;
+            });
+
+            const imagePrompt = `Clean modern editorial infographic illustration summarizing the key concept of: "${mainTopic}". High-contrast dark slate and cyan tech aesthetic, crisp visual metaphors, clean layout, professional research report cover graphic, no cluttered text.`;
+
+            const [finalSynthesis, generatedImage] = await Promise.all([
+                callRawGemini(finalContents, true, 0.3, 4096, null, signal),
+                generateResearchImage(imagePrompt, signal).catch(() => null)
+            ]);
+            throwIfAborted();
+
+            // Gabungkan sumber tambahan dari tahap sintesis jika ada
+            (finalSynthesis.sources || []).forEach(src => {
+                if (src.url && !seenUrls.has(src.url)) {
+                    seenUrls.add(src.url);
+                    allSources.push(src);
+                }
+            });
+
+            const { cleanText, relatedQueries } = extractRelatedQueries(finalSynthesis.text);
+
+            return {
+                text: cleanText,
+                sources: allSources,
+                relatedQueries: relatedQueries,
+                researchSteps: subQueries,
+                generatedImage: generatedImage
+            };
+        }
+
+        // ==========================================
+        // PEMANGGILAN GEMINI API (TEXT, SEARCH & IMAGE)
+        // ==========================================
+
+        async function callRawGemini(contents, useSearch = true, temperature = 0.3, maxOutputTokens = 2048, systemInstructionText = null, signal = null) {
+            const activeKey = customApiKey || apiKey;
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${activeKey}`;
+
+            const payload = {
+                contents: contents,
+                generationConfig: {
+                    temperature: temperature,
+                    maxOutputTokens: maxOutputTokens
+                }
+            };
+
+            if (useSearch) {
+                payload.tools = [{ google_search: {} }];
+            }
+
+            if (systemInstructionText) {
+                payload.systemInstruction = {
+                    parts: [{ text: systemInstructionText }]
+                };
+            }
+
+            let attempt = 0;
+            const maxRetries = 3;
+
+            while (attempt <= maxRetries) {
+                if (signal && signal.aborted) {
+                    throw new DOMException('Aborted', 'AbortError');
+                }
+
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                        signal: signal
+                    });
+
+                    if (!response.ok) {
+                        if ((response.status === 429 || response.status >= 500) && attempt < maxRetries) {
+                            await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));
+                            attempt++;
+                            continue;
+                        }
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error(errData?.error?.message || `HTTP Error ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result?.candidates?.[0];
+                    const text = candidate?.content?.parts?.map(p => p.text || '').join('') || '';
+
+                    if (!text) {
+                        throw new Error('Model tidak mengembalikan teks jawaban.');
+                    }
+
+                    // Ekstrak & validasi sumber dari Google Search Grounding
+                    const sources = extractValidSources(candidate?.groundingMetadata);
+
+                    return { text, sources };
+                } catch (err) {
+                    if (err.name === 'AbortError') throw err;
+                    if (attempt >= maxRetries) throw err;
+                    await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));
+                    attempt++;
+                }
+            }
+        }
+
+        // Pembuat Ilustrasi Visual Riset menggunakan Gemini 3.1 Flash Image
+        async function generateResearchImage(promptText, signal = null) {
+            try {
+                const activeKey = customApiKey || apiKey;
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${IMAGE_MODEL_NAME}:generateContent?key=${activeKey}`;
+
+                const payload = {
+                    contents: [{
+                        role: 'user',
+                        parts: [{ text: promptText }]
+                    }],
+                    generationConfig: {
+                        responseModalities: ['IMAGE'],
+                        imageConfig: { aspectRatio: "16:9" }
+                    }
+                };
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    signal: signal
+                });
+
+                if (!response.ok) return null;
+                const result = await response.json();
+                const parts = result?.candidates?.[0]?.content?.parts || [];
+                const part = parts.find(p => p.inlineData && p.inlineData.data);
+                if (!part) return null;
+
+                const mime = part.inlineData.mimeType || 'image/png';
+                return `data:${mime};base64,${part.inlineData.data}`;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ==========================================
+        // PARSING SUMBER VALID, SITASI & MERMAID
+        // ==========================================
+
+        function extractValidSources(groundingMetadata) {
+            if (!groundingMetadata) return [];
+            const chunks = groundingMetadata.groundingChunks || [];
+            const seen = new Set();
+            const validList = [];
+
+            chunks.forEach(chunk => {
+                const uri = chunk?.web?.uri;
+                const title = chunk?.web?.title;
+                if (!uri) return;
+
+                try {
+                    const parsedUrl = new URL(uri);
+                    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') return;
+                    if (seen.has(uri)) return;
+                    seen.add(uri);
+
+                    const domain = parsedUrl.hostname.replace(/^www\./, '');
+                    validList.push({
+                        url: uri,
+                        title: title || domain,
+                        domain: domain,
+                        favicon: `https://www.google.com/s2/favicons?domain=${domain}&sz=32`
+                    });
+                } catch (e) {
+                    // Abaikan URL tidak valid
+                }
+            });
+
+            return validList;
+        }
+
+        function extractRelatedQueries(fullText) {
+            const marker = '---RELATED---';
+            const idx = fullText.indexOf(marker);
+            if (idx === -1) {
+                return { cleanText: fullText.trim(), relatedQueries: [] };
+            }
+            const cleanText = fullText.slice(0, idx).trim();
+            const relatedBlock = fullText.slice(idx + marker.length).trim();
+            const relatedQueries = relatedBlock
+                .split('\n')
+                .map(q => q.replace(/^[\d\-\*\.\)]+\s*/, '').trim())
+                .filter(q => q.length > 3)
+                .slice(0, 3);
+
+            return { cleanText, relatedQueries };
+        }
+
+        function formatMarkdownWithCitations(markdownText, sources) {
+            let html = window.marked ? marked.parse(markdownText) : `<p>${escapeHtml(markdownText)}</p>`;
+
+            // Ganti pola [1], [2] di luar tag HTML menjadi lencana sitasi interaktif
+            html = html.replace(/\[(\d+)\]/g, (match, numStr) => {
+                const idx = parseInt(numStr, 10) - 1;
+                if (sources && sources[idx]) {
+                    const src = sources[idx];
+                    return `<a href="${escapeHtml(src.url)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(src.title)} (${escapeHtml(src.domain)})" class="inline-citation-badge">${numStr}</a>`;
+                }
+                return `<span class="inline-citation-badge">${numStr}</span>`;
+            });
+
+            return html;
+        }
+
+        // Render blok kode ```mermaid menjadi diagram SVG interaktif
+        async function renderMermaidDiagrams(turnId) {
+            if (!window.mermaid) return;
+            const bodyEl = document.getElementById(`${turnId}-markdown-body`);
+            if (!bodyEl) return;
+
+            const codeBlocks = bodyEl.querySelectorAll('pre code.language-mermaid');
+            for (let i = 0; i < codeBlocks.length; i++) {
+                const codeEl = codeBlocks[i];
+                const preEl = codeEl.parentElement;
+                if (!preEl) continue;
+
+                let graphDefinition = codeEl.textContent.trim()
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&amp;/g, '&');
+
+                const diagramId = `mermaid-${turnId}-${i}-${Math.floor(Math.random() * 100000)}`;
+
+                try {
+                    const renderResult = await mermaid.render(diagramId, graphDefinition);
+                    const svg = renderResult?.svg;
+                    if (!svg) continue;
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'mermaid-wrapper';
+                    wrapper.innerHTML = `
+                        <div class="w-full flex items-center justify-between mb-2 pb-1.5 border-b border-perplexity-border/60 text-[11px] text-perplexity-muted">
+                            <span class="flex items-center gap-1.5 font-medium text-perplexity-accent">
+                                <i data-lucide="git-fork" class="w-3.5 h-3.5"></i>
+                                Diagram Konsep Riset
+                            </span>
+                            <span>Diagram Interaktif</span>
+                        </div>
+                        ${svg}
+                    `;
+                    preEl.replaceWith(wrapper);
+                    lucide.createIcons();
+                } catch (err) {
+                    const brokenEl = document.getElementById(`d${diagramId}`) || document.getElementById(diagramId);
+                    if (brokenEl) brokenEl.remove();
+                }
+            }
+        }
+
+        // ==========================================
+        // RENDERING DOM UNTUK SETIAP TURN
+        // ==========================================
+
+        function createTurnSkeleton(turnId, query, fileMeta, isResearch) {
+            const threadView = document.getElementById('threadView');
+            const displayQuery = query.split('[KOREKSI / ARAHAN TAMBAHAN PENGGUNA]:').pop().trim();
+
+            const turnDiv = document.createElement('div');
+            turnDiv.id = turnId;
+            turnDiv.className = 'border-b border-perplexity-border/60 pb-8 space-y-4';
+
+            turnDiv.innerHTML = `
+                <!-- Pertanyaan Pengguna -->
+                <div class="space-y-2">
+                    ${fileMeta ? `
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-perplexity-surface border border-perplexity-border text-xs text-perplexity-text">
+                            <i data-lucide="${fileMeta.isImage ? 'image' : 'file-text'}" class="w-3.5 h-3.5 text-perplexity-accent"></i>
+                            <span>${escapeHtml(fileMeta.name)}</span>
+                        </div>
+                    ` : ''}
+                    <h2 class="text-xl sm:text-2xl font-semibold text-white leading-snug">${escapeHtml(displayQuery)}</h2>
+                </div>
+
+                <!-- Area Status / Progres Riset / Skeleton -->
+                <div class="turn-status-area space-y-3">
+                    ${isResearch ? `<div id="${turnId}-research-progress"></div>` : ''}
+                    <div class="space-y-2.5 pt-1">
+                        <div class="flex items-center gap-2 text-xs text-perplexity-accent font-medium">
+                            <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                            <span>${isResearch ? 'Menjalankan investigasi multi-sumber & menyusun visual...' : 'Menelusuri sumber web terverifikasi...'}</span>
+                        </div>
+                        <div class="h-3.5 w-3/4 rounded-md skeleton-line"></div>
+                        <div class="h-3.5 w-full rounded-md skeleton-line"></div>
+                        <div class="h-3.5 w-5/6 rounded-md skeleton-line"></div>
+                    </div>
+                </div>
+            `;
+
+            threadView.appendChild(turnDiv);
+            lucide.createIcons();
+            const scrollArea = document.getElementById('mainScrollArea');
+            scrollArea.scrollTop = scrollArea.scrollHeight;
+        }
+
+        function renderTurnResult(turnId, query, text, sources = [], relatedQueries = [], fileMeta = null, researchSteps = null, generatedImage = null) {
+            let turnDiv = document.getElementById(turnId);
+            if (!turnDiv) {
+                turnDiv = document.createElement('div');
+                turnDiv.id = turnId;
+                turnDiv.className = 'border-b border-perplexity-border/60 pb-8 space-y-4';
+                document.getElementById('threadView').appendChild(turnDiv);
+            }
+
+            const displayQuery = query.split('[KOREKSI / ARAHAN TAMBAHAN PENGGUNA]:').pop().trim();
+            const formattedHtml = formatMarkdownWithCitations(text, sources);
+
+            // Kartu Sumber Valid Terverifikasi
+            const sourcesHtml = sources.length > 0 ? `
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                            Sumber Valid Terverifikasi (${sources.length})
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        ${sources.slice(0, 8).map((s, idx) => `
+                            <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer" class="group p-2.5 rounded-xl bg-perplexity-surface hover:bg-perplexity-surfaceHover border border-perplexity-border hover:border-perplexity-accent/50 transition-all flex flex-col justify-between min-h-[68px]">
+                                <p class="text-[11px] font-medium text-perplexity-text group-hover:text-white line-clamp-2 leading-snug mb-1.5">${escapeHtml(s.title)}</p>
+                                <div class="flex items-center gap-1.5 text-[10px] text-perplexity-muted">
+                                    <img src="${escapeHtml(s.favicon)}" alt="" onerror="this.style.display='none'" class="w-3.5 h-3.5 rounded-xs shrink-0">
+                                    <span class="truncate">${escapeHtml(s.domain)}</span>
+                                    <span class="ml-auto px-1 rounded bg-perplexity-bg text-perplexity-accent font-mono">${idx + 1}</span>
+                                </div>
+                            </a>
+                        `).join('')}
+                    </div>
+                    ${sources.length > 0 ? `
+                        <details class="text-xs text-perplexity-muted">
+                            <summary class="cursor-pointer hover:text-white select-none py-1">Lihat daftar pustaka lengkap (${sources.length} tautan)</summary>
+                            <ol class="list-decimal ml-5 mt-1.5 space-y-1 text-[11px]">
+                                ${sources.map(s => `
+                                    <li>
+                                        <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer" class="text-perplexity-accent hover:underline">${escapeHtml(s.title)}</a>
+                                        <span class="text-perplexity-muted"> — ${escapeHtml(s.domain)}</span>
+                                    </li>
+                                `).join('')}
+                            </ol>
+                        </details>
+                    ` : ''}
+                </div>
+            ` : '';
+
+            // Metodologi Riset (Jika Mode Riset Mendalam)
+            const methodologyHtml = (researchSteps && researchSteps.length > 0) ? `
+                <details class="p-3 rounded-xl bg-perplexity-surface/70 border border-perplexity-accent/30 text-xs">
+                    <summary class="cursor-pointer font-medium text-perplexity-accent flex items-center gap-2 select-none">
+                        <i data-lucide="microscope" class="w-3.5 h-3.5"></i>
+                        Metodologi Riset Mendalam (${researchSteps.length} Sudut Pandang Investigasi)
+                    </summary>
+                    <ul class="list-disc ml-5 mt-2 space-y-1 text-perplexity-muted">
+                        ${researchSteps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}
+                    </ul>
+                </details>
+            ` : '';
+
+            // Visual Infografis Riset (Jika tersedia)
+            const visualImageHtml = generatedImage ? `
+                <div class="rounded-2xl overflow-hidden border border-perplexity-border bg-perplexity-surface">
+                    <div class="px-3.5 py-2 border-b border-perplexity-border flex items-center justify-between text-xs">
+                        <span class="font-medium text-perplexity-accent flex items-center gap-1.5">
+                            <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                            Visualisasi Infografis Riset
+                        </span>
+                        <a href="${generatedImage}" download="visual-riset-nexusai.png" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-perplexity-bg hover:bg-perplexity-surfaceHover text-perplexity-text border border-perplexity-border text-[11px] transition-colors">
+                            <i data-lucide="download" class="w-3 h-3"></i>
+                            <span>Unduh PNG</span>
+                        </a>
+                    </div>
+                    <img src="${generatedImage}" alt="Visualisasi Hasil Riset" class="w-full h-auto max-h-96 object-cover">
+                </div>
+            ` : '';
+
+            // Pertanyaan Terkait
+            const relatedHtml = (relatedQueries && relatedQueries.length > 0) ? `
+                <div class="pt-3 border-t border-perplexity-border/50 space-y-2">
+                    <span class="text-xs font-semibold text-perplexity-muted flex items-center gap-1.5">
+                        <i data-lucide="layers" class="w-3.5 h-3.5 text-perplexity-accent"></i>
+                        Pertanyaan Terkait
+                    </span>
+                    <div class="divide-y divide-perplexity-border/40">
+                        ${relatedQueries.map(rq => `
+                            <button type="button" onclick="askRelatedQuery('${escapeAttr(rq)}')" class="w-full py-2.5 text-left text-xs sm:text-sm text-perplexity-text hover:text-perplexity-accent flex items-center justify-between gap-2 transition-colors cursor-pointer group">
+                                <span>${escapeHtml(rq)}</span>
+                                <i data-lucide="plus" class="w-4 h-4 text-perplexity-muted group-hover:text-perplexity-accent shrink-0"></i>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+
+            turnDiv.innerHTML = `
+                <!-- Pertanyaan -->
+                <div class="space-y-2">
+                    ${fileMeta ? `
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-perplexity-surface border border-perplexity-border text-xs text-perplexity-text">
+                            <i data-lucide="${fileMeta.isImage ? 'image' : 'file-text'}" class="w-3.5 h-3.5 text-perplexity-accent"></i>
+                            <span>${escapeHtml(fileMeta.name)}</span>
+                        </div>
+                    ` : ''}
+                    <h2 class="text-xl sm:text-2xl font-semibold text-white leading-snug">${escapeHtml(displayQuery)}</h2>
+                </div>
+
+                <!-- Sumber Valid -->
+                ${sourcesHtml}
+
+                <!-- Metodologi Riset -->
+                ${methodologyHtml}
+
+                <!-- Gambar Visual Riset -->
+                ${visualImageHtml}
+
+                <!-- Jawaban Utama -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-perplexity-accent"></i>
+                            ${researchSteps ? 'Laporan Riset' : 'Jawaban'}
+                        </span>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="copyTurnText('${turnId}')" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-perplexity-surface hover:bg-perplexity-surfaceHover border border-perplexity-border text-[11px] text-perplexity-muted hover:text-white transition-colors cursor-pointer">
+                                <i data-lucide="copy" class="w-3 h-3"></i>
+                                <span>Salin</span>
+                            </button>
+                            ${researchSteps ? `
+                                <button type="button" onclick="downloadMarkdownReport('${turnId}', '${escapeAttr(displayQuery)}')" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-perplexity-surface hover:bg-perplexity-surfaceHover border border-perplexity-border text-[11px] text-perplexity-accent hover:text-white transition-colors cursor-pointer">
+                                    <i data-lucide="file-down" class="w-3 h-3"></i>
+                                    <span>Unduh .md</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div id="${turnId}-markdown-body" class="prose-custom text-sm sm:text-[15px]">
+                        ${formattedHtml}
+                    </div>
+                    <textarea id="${turnId}-raw-text" class="hidden">${escapeHtml(text)}</textarea>
+                </div>
+
+                <!-- Pertanyaan Terkait -->
+                ${relatedHtml}
+            `;
+
+            lucide.createIcons();
+            renderMermaidDiagrams(turnId);
+        }
+
+        function renderTurnError(turnId, errorMsg) {
+            const turnDiv = document.getElementById(turnId);
+            if (!turnDiv) return;
+            const statusArea = turnDiv.querySelector('.turn-status-area');
+            if (statusArea) {
+                statusArea.innerHTML = `
+                    <div class="p-4 rounded-xl bg-red-950/60 border border-red-500/40 text-xs text-red-200 space-y-1">
+                        <p class="font-semibold flex items-center gap-1.5 text-red-300">
+                            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                            Gagal Memproses Permintaan
+                        </p>
+                        <p>${escapeHtml(errorMsg)}</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        function askRelatedQuery(q) {
+            const input = document.getElementById('followUpInput');
+            input.value = q;
+            submitQuery('followup');
+        }
+
+        function copyTurnText(turnId) {
+            const rawEl = document.getElementById(`${turnId}-raw-text`);
+            if (!rawEl) return;
+            rawEl.classList.remove('hidden');
+            rawEl.select();
+            document.execCommand('copy');
+            rawEl.classList.add('hidden');
+            showToast('Jawaban disalin ke clipboard', 'success');
+        }
+
+        function downloadMarkdownReport(turnId, title) {
+            const rawEl = document.getElementById(`${turnId}-raw-text`);
+            if (!rawEl) return;
+            const blob = new Blob([`# ${title}\n\n${rawEl.value}`], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `riset-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Laporan Markdown diunduh', 'success');
+        }
+
+        // ==========================================
+        // RIWAYAT UTAS (LOCALSTORAGE)
+        // ==========================================
+
+        function saveThreadToStorage(query, text, sources, relatedQueries, fileMeta, researchSteps, generatedImage) {
+            const cleanTitle = query.split('[KOREKSI / ARAHAN TAMBAHAN PENGGUNA]:').pop().trim();
+
+            if (!currentThreadId) {
+                currentThreadId = String(Date.now());
+                savedThreads.unshift({
+                    id: currentThreadId,
+                    title: cleanTitle,
+                    updatedAt: Date.now(),
+                    turns: []
+                });
+            }
+
+            const thread = savedThreads.find(t => String(t.id) === String(currentThreadId));
+            if (!thread) return;
+
+            const safeFileMeta = fileMeta ? { name: fileMeta.name, isImage: fileMeta.isImage } : null;
+            thread.turns.push({
+                query: cleanTitle,
+                text,
+                sources,
+                relatedQueries,
+                fileMeta: safeFileMeta,
+                researchSteps
+            });
+            thread.updatedAt = Date.now();
+
+            // Batasi maksimal 20 riwayat agar kuota penyimpanan tetap aman
+            if (savedThreads.length > 20) {
+                savedThreads = savedThreads.slice(0, 20);
+            }
+
+            try {
+                localStorage.setItem('nexus_threads', JSON.stringify(savedThreads));
+            } catch (e) {
+                // Jika kuota penuh, pangkas riwayat lama
+                savedThreads = savedThreads.slice(0, 5);
+                localStorage.setItem('nexus_threads', JSON.stringify(savedThreads));
+            }
+            renderHistoryList();
+        }
+
+        function renderHistoryList() {
+            const container = document.getElementById('historyList');
+            if (!savedThreads || savedThreads.length === 0) {
+                container.innerHTML = `<p class="text-xs text-perplexity-muted px-2 py-4 text-center">Belum ada riwayat pencarian</p>`;
+                return;
+            }
+
+            container.innerHTML = savedThreads.map(t => {
+                const isActive = String(t.id) === String(currentThreadId);
+                return `
+                    <div class="group flex items-center justify-between gap-1 rounded-xl px-2.5 py-2 text-xs transition-colors ${isActive ? 'bg-perplexity-surface text-white font-medium' : 'text-perplexity-muted hover:bg-perplexity-surface/60 hover:text-white'}">
+                        <button type="button" onclick="loadThread('${String(t.id)}')" class="flex-1 text-left truncate cursor-pointer py-0.5">
+                            ${escapeHtml(t.title)}
+                        </button>
+                        <button type="button" onclick="deleteThread(event, '${String(t.id)}')" title="Hapus utas" class="opacity-0 group-hover:opacity-100 p-1 rounded hover:text-red-400 transition-opacity cursor-pointer">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function loadThread(threadId) {
+            if (isGenerating) cancelActiveRequest(true);
+            const thread = savedThreads.find(t => String(t.id) === String(threadId));
+            if (!thread) return;
+
+            currentThreadId = String(thread.id);
+            conversationHistory = [];
+
+            document.getElementById('homeView').classList.add('hidden');
+            const threadView = document.getElementById('threadView');
+            threadView.classList.remove('hidden');
+            threadView.innerHTML = '';
+            document.getElementById('followUpBar').classList.remove('hidden');
+
+            thread.turns.forEach((turn, index) => {
+                const turnId = `loaded-turn-${thread.id}-${index}`;
+                conversationHistory.push({ role: 'user', parts: [{ text: turn.query }] });
+                conversationHistory.push({ role: 'model', parts: [{ text: turn.text }] });
+                renderTurnResult(
+                    turnId,
+                    turn.query,
+                    turn.text,
+                    turn.sources || [],
+                    turn.relatedQueries || [],
+                    turn.fileMeta || null,
+                    turn.researchSteps || null,
+                    null
+                );
+            });
+
+            renderHistoryList();
+
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('mobileOverlay').classList.add('hidden');
+            }
+        }
+
+        function deleteThread(event, threadId) {
+            event.stopPropagation();
+            savedThreads = savedThreads.filter(t => String(t.id) !== String(threadId));
+            localStorage.setItem('nexus_threads', JSON.stringify(savedThreads));
+            if (String(currentThreadId) === String(threadId)) {
+                startNewThread();
+            } else {
+                renderHistoryList();
+            }
+        }
+
+        function clearAllHistory() {
+            savedThreads = [];
+            localStorage.removeItem('nexus_threads');
+            startNewThread();
+            showToast('Semua riwayat utas dihapus', 'info');
+        }
+
+        // ==========================================
+        // UTILITAS SANITASI HTML
+        // ==========================================
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function escapeAttr(str) {
+            return escapeHtml(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+    </script>
+</body>
+</html>
